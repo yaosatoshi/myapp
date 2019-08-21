@@ -3,6 +3,8 @@ package com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_a
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateMachineCommonBase
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateMachineCommonTypes
 
-class STM_A(own: StateMachineCommonTypes) : StateMachineCommonBase(own.ordinal) {
+class STM_A(var ownState: StateMachineCommonTypes) : StateMachineCommonBase(ownState.ordinal) {
     private val TAG = javaClass.simpleName
+
+    override fun isRootStateMachine() = ownState.getParent() == null
 }

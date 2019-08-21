@@ -1,10 +1,12 @@
 package com.yao.project.viva.app.vivaeditor.mgr.stateManager
 
+import kotlin.reflect.KClass
+
 abstract class StateTreeBase {
 
     private class Node(
-            var sm: StateMachineBase,
-            var childlist: MutableList<Node>? = null
+        var sm: StateMachineBase,
+        var childlist: MutableList<Node>? = null
     ) {
         fun find(type: Int): Node? {
             return findPrivate(type, this)
@@ -31,7 +33,8 @@ abstract class StateTreeBase {
     abstract fun getRootStateMachineIndex(): Int
     abstract fun generateStateMachineInstance(idx: Int): StateMachineBase
     abstract fun getSizeOfStateMachines(): Int
-    abstract fun getParentStateMachineIndex(idx:Int): Int
+    abstract fun getParentStateMachineIndex(idx: Int): Int
+    abstract fun getChildStateMachines(idx: Int): Map<KClass<out StateBase>, Int>
 
     // TODO 次ここ。StateMachineTypesを基底クラス化し、STMを沢山作れるようにする。
     fun init() {
@@ -64,6 +67,22 @@ abstract class StateTreeBase {
             root
         }
     }
+
+    fun setState(type: Int, state: KClass<out StateBase>) {
+        rootNode.find(type)?.let {
+            it.sm.apply {
+                setState(state)
+                getChildStateMachines(type)[state]?.let {
+                    // 子供のStateMachineがある場合
+                    rootNode.find(it)?.let {
+
+                        it.sm.startState()
+                    }
+                }
+            }
+        }
+    }
+
 
     fun destroy() {
         destroyPrivate(rootNode)

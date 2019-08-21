@@ -4,40 +4,55 @@ import android.util.Log
 
 abstract class StateMachineNormal {
 
-    private var mTrans: StateTransition? = null
+    private var mTrans: StateTransition = StateTransition()
 
     val currentStateMachine: NormalState
         @Synchronized get() = getStateMachine(currentState)
 
     val currentState: Int
-        @Synchronized get() = mTrans!!.currentState
+        @Synchronized get() = mTrans.currentState
 
-    fun set(list: List<NormalState>) {
-        mTrans = StateTransition()
-        mTrans!!.startState(list)
+    var isStart = false
+
+    open fun _set(list: List<NormalState>, isStartState: Boolean) {
+        mTrans.startState(list, isStartState)
     }
 
     open fun destroy() {
-        mTrans!!.destroy()
-        mTrans = null
+        mTrans.destroy()
     }
 
     @Synchronized
     fun restart() {
-        mTrans!!.restart()
+        mTrans.restart()
     }
 
     @Synchronized
-    fun setState(state: Int) {
-        mTrans!!.setState(state)
+    open fun _setState(state: Int) {
+        mTrans.setState(state)
+    }
+
+    @Synchronized
+    open fun startState() {
+        mTrans.setState(0)
+        isStart = true
+    }
+
+    @Synchronized
+    open fun stopState() {
+        mTrans.setState(-1)
+        isStart = false
     }
 
     @Synchronized
     fun getStateMachine(state: Int): NormalState {
-        return mTrans!!.getStateMachine(state)
+        return mTrans.getStateMachine(state)
     }
 
-    private class StateTransition {
+    @Synchronized
+    fun getStateList() = mTrans.getStateList()
+
+    private inner class StateTransition {
 
         var currentState = -1
         private var list: List<NormalState>? = null
@@ -52,15 +67,27 @@ abstract class StateMachineNormal {
             list = null
         }
 
-        fun startState(list: List<NormalState>?) {
+        fun startState(list: List<NormalState>?, isStartState: Boolean) {
             if (list != null && list.size > 0) {
                 this.list = list
-                setState(0)
+                if (isStartState) {
+                    setState(0)
+                    isStart = true
+                }
             }
         }
 
         fun setState(new_state: Int) {
-            if (new_state != currentState && !is_state_changing) {
+            if (new_state < 0 && !is_state_changing) {
+                // stop state
+                is_state_changing = true
+                if (currentState >= 0) {
+                    list!![currentState].epilogue()
+                    currentState = -1
+                }
+                is_state_changing = false
+
+            } else if (new_state != currentState && !is_state_changing) {
                 is_state_changing = true
                 if (currentState >= 0) {
                     list!![currentState].epilogue()
@@ -90,5 +117,7 @@ abstract class StateMachineNormal {
         fun getStateMachine(state: Int): NormalState {
             return list!![state]
         }
+
+        fun getStateList(): List<NormalState>? = list
     }
 }

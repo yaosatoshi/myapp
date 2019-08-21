@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 
 object StateManagerCommon {
 
-    private lateinit var stateTree : StateTreeCommon
+    private lateinit var stateTree: StateTreeCommon
 
     fun init() {
         stateTree = StateTreeCommon()
@@ -16,7 +16,7 @@ object StateManagerCommon {
     }
 
     fun setState(type: StateMachineCommonTypes, state: KClass<out StateCommonBase>) {
-        TODO()
+        stateTree.setState(type, state)
     }
 
     // Singletonなのでタスクキルした時にdestroyを実行する必要がある。

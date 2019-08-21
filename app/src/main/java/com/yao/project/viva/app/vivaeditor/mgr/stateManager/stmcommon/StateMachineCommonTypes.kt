@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 
 enum class StateMachineCommonTypes {
     // このデータ構造をTreeで表現するのは非常に辛いので横並びで定義する。こうしておくとStateMachineの追加と紐付けが非常に楽になるので。
-    ROOT {
+    ROOT_IDX {
         override fun getParent() = null     // null is only StateMachineTypes.ROOT
         override fun generateInstance() = STM_A(this).apply {
             set(
@@ -25,12 +25,12 @@ enum class StateMachineCommonTypes {
             )
         }
 
-        override fun getChildStates(): Map<StateMachineCommonTypes, KClass<out StateCommonBase>> = mapOf(
-            SELECT_CONTENTS to STM_A_State_C::class
+        override fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes> = mapOf(
+            STM_A_State_C::class to STM_B_IDX
         )
     },
-    SELECT_CONTENTS {
-        override fun getParent() = ROOT
+    STM_B_IDX {
+        override fun getParent() = ROOT_IDX
         override fun generateInstance() = STM_B(this).apply {
             set(
                 listOf(
@@ -42,11 +42,11 @@ enum class StateMachineCommonTypes {
             )
         }
 
-        override fun getChildStates(): Map<StateMachineCommonTypes, KClass<out StateCommonBase>> = mapOf()
+        override fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes> = mapOf()
     },
     ;
 
     abstract fun generateInstance(): StateMachineCommonBase
     abstract fun getParent(): StateMachineCommonTypes?
-    abstract fun getChildStates(): Map<StateMachineCommonTypes, KClass<out StateCommonBase>>
+    abstract fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes>
 }
