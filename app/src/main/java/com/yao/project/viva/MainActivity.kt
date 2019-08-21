@@ -10,6 +10,8 @@ import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_a.stat
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_A
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_B
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_C
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_c.states.STM_C_State_C
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_d.states.STM_D_State_A
 
 class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
@@ -20,13 +22,17 @@ class MainActivity : AppCompatActivity() {
         StateManagerCommon.init()
 
 //        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
-//        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_B::class)
+        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_B::class)
         StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_C::class)
 //        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_A::class)
         StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_B::class)
 //        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_C::class)
 //        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_D::class)
 //        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_C::class)
+        StateManagerCommon.setState(StateMachineCommonTypes.STM_C_IDX, STM_C_State_C::class)
+
+        StateManagerCommon.setState(StateMachineCommonTypes.STM_D_IDX, STM_D_State_A::class)
+
         StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_None::class)
     }
 

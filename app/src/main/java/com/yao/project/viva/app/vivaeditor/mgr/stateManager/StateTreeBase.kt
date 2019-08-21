@@ -85,6 +85,13 @@ abstract class StateTreeBase {
         }
     }
 
+    fun getCurrentTopStateMachine() : StateMachineBase {
+        TODO("最下層のカレントSTMを返す。なぜならonTouchのようなイベントを送りたい場合は中間STMのSTATEには発行できないため")
+    }
+    fun getCurrentTopState() : StateBase {
+        TODO("最下層のカレント状態を返す。なぜならonTouchのようなイベントを送りたい場合は中間STMのSTATEには発行できないため")
+    }
+
     fun setState(type: Int, state: KClass<out StateBase>) {
         rootNode.findNode(type)?.let {
             it.sm.apply {
@@ -99,6 +106,7 @@ abstract class StateTreeBase {
                 getChildStateMachines(type)[state]?.let {
                     // 子供のStateMachineがある場合
                     rootNode.findNode(it)?.sm!!.startState()
+                    TODO("ここでセットされるStateは０番だが、０番がchildSTMをもつ場合には、startState()を再帰で処理する必要がある")
                 }
             }
         }
