@@ -50,6 +50,7 @@ abstract class StateTreeBase {
             }
 
             do {
+                val deleteList = mutableListOf<Int>()
                 pendingList.forEach { addIndex ->
                     root.find(addIndex) ?: run {
                         val value = generateStateMachineInstance(addIndex)
@@ -58,9 +59,12 @@ abstract class StateTreeBase {
                             it.childlist?.add(newnode) ?: run {
                                 it.childlist = mutableListOf(newnode)
                             }
-                            pendingList.remove(addIndex)
+                            deleteList.add(addIndex)
                         }
                     }
+                }
+                deleteList.forEach {
+                    pendingList.remove(it)
                 }
             } while (pendingList.size > 0)
 

@@ -7,6 +7,9 @@ import android.util.Log
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateMachineCommonTypes
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateManagerCommon
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_a.states.*
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_A
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_B
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_C
 
 class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
@@ -16,10 +19,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         StateManagerCommon.init()
 
-        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
-        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_B::class)
+//        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
+//        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_B::class)
         StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_C::class)
-        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_D::class)
+//        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_A::class)
+        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_B::class)
+//        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_C::class)
+//        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_D::class)
+//        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_C::class)
         StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_None::class)
     }
 
