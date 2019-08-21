@@ -3,9 +3,9 @@ package com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.sta
 import android.util.Log
 
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateCommonBase
-import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.STM_C
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.STM_B
 
-class STM_B_State_A(stm: STM_C) : StateCommonBase(stm) {
+class STM_B_State_A(stm: STM_B) : StateCommonBase(stm) {
     private val TAG = javaClass.simpleName
 
     override fun name(): String {
