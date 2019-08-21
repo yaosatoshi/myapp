@@ -4,37 +4,50 @@ import kotlin.reflect.KClass
 
 abstract class StateTreeBase {
 
-    private class Node(
+    abstract fun getRootStateMachineIndex(): Int
+    abstract fun generateStateMachineInstance(idx: Int): StateMachineBase
+    abstract fun getSizeOfStateMachines(): Int
+    abstract fun getParentStateMachineIndex(idx: Int): Int
+    abstract fun getChildStateMachines(idx: Int): Map<KClass<out StateBase>, Int>
+
+    private inner class Node(
         var sm: StateMachineBase,
         var childlist: MutableList<Node>? = null
     ) {
-        fun find(type: Int): Node? {
-            return findPrivate(type, this)
+        fun findNode(type: Int): Node? {
+            return findNodePrivate(type, this)
         }
 
-        private fun findPrivate(type: Int, node: Node?): Node? {
+        private fun findNodePrivate(type: Int, node: Node?): Node? {
             return node?.let {
                 if (it.sm.own == type) {
                     it
                 } else {
                     var found: Node? = null
                     it.childlist?.forEach {
-                        found = findPrivate(type, it)
+                        found = findNodePrivate(type, it)
                         if (found != null) return@forEach
                     }
                     found
                 }
             }
         }
+
+        fun callbackCurrentFromBottomNode(cb: (StateMachineBase) -> Unit) {
+            callbackCurrentFromBottomNodePrivate(this, cb)
+        }
+
+        private fun callbackCurrentFromBottomNodePrivate(node: Node, cb: (StateMachineBase) -> Unit) {
+            if ( node.sm.currentState >= 0 ) {
+                getChildStateMachines(node.sm.own)[node.sm.getStateClass(node.sm.currentState)::class]?.let {
+                    callbackCurrentFromBottomNodePrivate(node.findNode(it)!!, cb)
+                }
+                cb.invoke(node.sm)
+            }
+        }
     }
 
     private lateinit var rootNode: Node
-
-    abstract fun getRootStateMachineIndex(): Int
-    abstract fun generateStateMachineInstance(idx: Int): StateMachineBase
-    abstract fun getSizeOfStateMachines(): Int
-    abstract fun getParentStateMachineIndex(idx: Int): Int
-    abstract fun getChildStateMachines(idx: Int): Map<KClass<out StateBase>, Int>
 
     // TODO 次ここ。StateMachineTypesを基底クラス化し、STMを沢山作れるようにする。
     fun init() {
@@ -52,9 +65,9 @@ abstract class StateTreeBase {
             do {
                 val deleteList = mutableListOf<Int>()
                 pendingList.forEach { addIndex ->
-                    root.find(addIndex) ?: run {
+                    root.findNode(addIndex) ?: run {
                         val value = generateStateMachineInstance(addIndex)
-                        root.find(getParentStateMachineIndex(value.own))?.let {
+                        root.findNode(getParentStateMachineIndex(value.own))?.let {
                             val newnode = Node(value, null)
                             it.childlist?.add(newnode) ?: run {
                                 it.childlist = mutableListOf(newnode)
@@ -73,18 +86,19 @@ abstract class StateTreeBase {
     }
 
     fun setState(type: Int, state: KClass<out StateBase>) {
-        rootNode.find(type)?.let {
+        rootNode.findNode(type)?.let {
             it.sm.apply {
-                if (it.sm.currentState >= 0) {
-
-                    getChildStateMachines(type)[it.sm.getStateMachine(it.sm.currentState)::class]?.let {
-                        rootNode.find(it)?.sm!!.stopState()
+                if (currentState >= 0) {
+                    getChildStateMachines(it.sm.own)[it.sm.getStateClass(it.sm.currentState)::class]?.let {
+                        rootNode.findNode(it)!!.callbackCurrentFromBottomNode {
+                            it.stopState()
+                        }
                     }
                 }
                 setState(state)
                 getChildStateMachines(type)[state]?.let {
                     // 子供のStateMachineがある場合
-                    rootNode.find(it)?.sm!!.startState()
+                    rootNode.findNode(it)?.sm!!.startState()
                 }
             }
         }

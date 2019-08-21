@@ -6,8 +6,11 @@ abstract class StateMachineNormal {
 
     private var mTrans: StateTransition = StateTransition()
 
+    abstract fun onStartStateMachine()
+    abstract fun onStopStateMachine()
+
     val currentStateMachine: NormalState
-        @Synchronized get() = getStateMachine(currentState)
+        @Synchronized get() = getStateClass(currentState)
 
     val currentState: Int
         @Synchronized get() = mTrans.currentState
@@ -34,6 +37,7 @@ abstract class StateMachineNormal {
 
     @Synchronized
     open fun startState() {
+        onStartStateMachine()
         mTrans.setState(0)
         isStart = true
     }
@@ -42,10 +46,11 @@ abstract class StateMachineNormal {
     open fun stopState() {
         mTrans.setState(-1)
         isStart = false
+        onStopStateMachine()
     }
 
     @Synchronized
-    fun getStateMachine(state: Int): NormalState {
+    fun getStateClass(state: Int): NormalState {
         return mTrans.getStateMachine(state)
     }
 
@@ -71,6 +76,7 @@ abstract class StateMachineNormal {
             if (list != null && list.size > 0) {
                 this.list = list
                 if (isStartState) {
+                    onStartStateMachine()
                     setState(0)
                     isStart = true
                 }
