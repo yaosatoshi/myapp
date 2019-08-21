@@ -3,6 +3,7 @@ package com.yao.project.viva
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateMachineCommonTypes
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateManagerCommon
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_a.states.*

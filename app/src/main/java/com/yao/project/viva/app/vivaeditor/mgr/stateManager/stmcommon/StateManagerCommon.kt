@@ -1,5 +1,6 @@
 package com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon
 
+import android.util.Log
 import kotlin.reflect.KClass
 
 /**
@@ -7,6 +8,7 @@ import kotlin.reflect.KClass
  */
 
 object StateManagerCommon {
+    private val TAG = javaClass.simpleName
 
     private lateinit var stateTree: StateTreeCommon
 
@@ -16,6 +18,7 @@ object StateManagerCommon {
     }
 
     fun setState(type: StateMachineCommonTypes, state: KClass<out StateCommonBase>) {
+        Log.i(TAG, "STM setState /type:${type.name} /state:${state.java.simpleName}")
         stateTree.setState(type, state)
     }
 

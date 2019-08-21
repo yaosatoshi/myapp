@@ -71,13 +71,16 @@ abstract class StateTreeBase {
     fun setState(type: Int, state: KClass<out StateBase>) {
         rootNode.find(type)?.let {
             it.sm.apply {
+                if (it.sm.currentState >= 0) {
+
+                    getChildStateMachines(type)[it.sm.getStateMachine(it.sm.currentState)::class]?.let {
+                        rootNode.find(it)?.sm!!.stopState()
+                    }
+                }
                 setState(state)
                 getChildStateMachines(type)[state]?.let {
                     // 子供のStateMachineがある場合
-                    rootNode.find(it)?.let {
-
-                        it.sm.startState()
-                    }
+                    rootNode.find(it)?.sm!!.startState()
                 }
             }
         }

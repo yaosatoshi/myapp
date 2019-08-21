@@ -7,6 +7,11 @@ import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.stat
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_B
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_C
 import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_b.states.STM_B_State_None
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_c.STM_C
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_c.states.STM_C_State_A
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_c.states.STM_C_State_B
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_c.states.STM_C_State_C
+import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.stm_c.states.STM_C_State_None
 import kotlin.reflect.KClass
 
 enum class StateMachineCommonTypes {
@@ -42,8 +47,25 @@ enum class StateMachineCommonTypes {
             )
         }
 
-        override fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes> = mapOf()
+        override fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes> = mapOf(
+            STM_B_State_B::class to STM_C_IDX
+        )
     },
+    STM_C_IDX {
+        override fun getParent() = STM_B_IDX
+        override fun generateInstance() = STM_C(this).apply {
+            set(
+                listOf(
+                    STM_C_State_None(this),
+                    STM_C_State_A(this),
+                    STM_C_State_B(this),
+                    STM_C_State_C(this)
+                )
+            )
+        }
+
+        override fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes> = mapOf()
+    }
     ;
 
     abstract fun generateInstance(): StateMachineCommonBase
