@@ -7,8 +7,6 @@ import com.yao.project.viva.app.vivaeditor.mgr.stateManager.stmcommon.StateMachi
 class STM_A(var ownState: StateMachineCommonTypes) : StateMachineCommonBase(ownState.ordinal) {
     private val TAG = javaClass.simpleName
 
-    override fun isRootStateMachine() = ownState.getParent() == null
-
     override fun onStartStateMachine() {
         Log.i(TAG, "onStartStateMachine()")
     }
