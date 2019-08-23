@@ -10,7 +10,7 @@ abstract class StateMachineBase(var own: Int) : StateMachineNormal() {
     abstract fun isRootStateMachine(): Boolean
 
     fun set(l: List<StateBase>) {
-        super._set(l, isRootStateMachine())
+        super._set(l)
         stateMap = mutableMapOf<KClass<out StateBase>, Int>().apply {
             var i = 0
             l.forEach {

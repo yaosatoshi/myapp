@@ -36,7 +36,7 @@ enum class StateMachineCommonTypes {
         }
 
         override fun getChildStates(): Map<KClass<out StateCommonBase>, StateMachineCommonTypes> = mapOf(
-            STM_A_State_C::class to STM_B_IDX
+            STM_A_State_None::class to STM_B_IDX
         )
     },
     STM_B_IDX {

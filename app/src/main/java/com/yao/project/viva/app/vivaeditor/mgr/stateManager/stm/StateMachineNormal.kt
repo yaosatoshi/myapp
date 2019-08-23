@@ -17,8 +17,8 @@ abstract class StateMachineNormal {
 
     var isStart = false
 
-    open fun _set(list: List<NormalState>, isStartState: Boolean) {
-        mTrans.startState(list, isStartState)
+    open fun _set(list: List<NormalState>) {
+        mTrans.startState(list)
     }
 
     open fun destroy() {
@@ -72,14 +72,9 @@ abstract class StateMachineNormal {
             list = null
         }
 
-        fun startState(list: List<NormalState>?, isStartState: Boolean) {
+        fun startState(list: List<NormalState>?) {
             if (list != null && list.size > 0) {
                 this.list = list
-                if (isStartState) {
-                    onStartStateMachine()
-                    setState(0)
-                    isStart = true
-                }
             }
         }
 

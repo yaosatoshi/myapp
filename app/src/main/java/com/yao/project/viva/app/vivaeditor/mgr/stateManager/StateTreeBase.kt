@@ -83,6 +83,8 @@ abstract class StateTreeBase {
 
             root
         }
+
+        setState(0, rootNode.sm.getStateClass(0)::class as KClass<out StateBase>)
     }
 
     fun getCurrentTopStateMachine() : StateMachineBase {
