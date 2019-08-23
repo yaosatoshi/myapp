@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         StateManagerCommon.init()
 
+        // 完成どわ！！！
+
 //        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
         StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
         StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_B::class)
