@@ -37,6 +37,24 @@ abstract class StateTreeBase {
             callbackCurrentFromBottomNodePrivate(this, cb)
         }
 
+        // 最下層のcurrentを一度だけ呼び出す
+        fun currentBottomNode() : Node {
+            var node = this
+            if (node.sm.currentState >= 0) {
+                var childstate = getChildStateMachines(node.sm.own)[node.sm.getStateClass(node.sm.currentState)::class]
+                while (childstate != null) {
+                    node = node.findNode(childstate)!!
+                    if (node.sm.currentState >= 0) {
+                        childstate = getChildStateMachines(node.sm.own)[node.sm.getStateClass(node.sm.currentState)::class]
+
+                    } else {
+                        return node
+                    }
+                }
+            }
+            return node
+        }
+
         private fun callbackCurrentFromBottomNodePrivate(node: Node, cb: (StateMachineBase) -> Unit) {
             if ( node.sm.currentState >= 0 ) {
                 getChildStateMachines(node.sm.own)[node.sm.getStateClass(node.sm.currentState)::class]?.let {
@@ -88,10 +106,12 @@ abstract class StateTreeBase {
     }
 
     fun getCurrentTopStateMachine() : StateMachineBase {
-        TODO("最下層のカレントSTMを返す。なぜならonTouchのようなイベントを送りたい場合は中間STMのSTATEには発行できないため")
+        return rootNode.currentBottomNode().sm
     }
     fun getCurrentTopState() : StateBase {
-        TODO("最下層のカレント状態を返す。なぜならonTouchのようなイベントを送りたい場合は中間STMのSTATEには発行できないため")
+        return rootNode.currentBottomNode().let {
+            it.sm.getStateClass(it.sm.currentState) as StateBase
+        }
     }
 
     fun setState(type: Int, state: KClass<out StateBase>) {

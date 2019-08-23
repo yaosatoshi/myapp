@@ -18,8 +18,9 @@ object StateManagerCommon {
     }
 
     fun setState(type: StateMachineCommonTypes, state: KClass<out StateCommonBase>) {
-        Log.i(TAG, "STM setState /type:${type.name} /state:${state.java.simpleName}")
+        Log.i(TAG, "STM setState start /type:${type.name} /state:${state.java.simpleName}")
         stateTree.setState(type, state)
+        Log.i(TAG, "--- STM setState end /current:${stateTree.getCurrentTopStateMachine().javaClass.simpleName} / ${stateTree.getCurrentTopState().javaClass.simpleName}")
     }
 
     // Singletonなのでタスクキルした時にdestroyを実行する必要がある。

@@ -22,8 +22,9 @@ class MainActivity : AppCompatActivity() {
         StateManagerCommon.init()
 
 //        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
-        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_B::class)
-        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_C::class)
+        StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_A::class)
+        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_B::class)
+        StateManagerCommon.setState(StateMachineCommonTypes.STM_C_IDX, STM_C_State_C::class)
         StateManagerCommon.setState(StateMachineCommonTypes.ROOT_IDX, STM_A_State_D::class)
 //        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_A::class)
 //        StateManagerCommon.setState(StateMachineCommonTypes.STM_B_IDX, STM_B_State_B::class)
