@@ -105,8 +105,18 @@ abstract class StateTreeBase {
                 setState(state)
                 getChildStateMachines(type)[state]?.let {
                     // 子供のStateMachineがある場合
-                    rootNode.findNode(it)?.sm!!.startState()
-                    TODO("ここでセットされるStateは０番だが、０番がchildSTMをもつ場合には、startState()を再帰で処理する必要がある")
+                    rootNode.findNode(it)?.apply {
+                        sm.startState()
+                        var sm2 = sm
+                        var node = this
+                        var childstate = getChildStateMachines(sm2.own)[sm2.getStateClass(sm2.currentState)::class]
+                        while(childstate != null) {
+                                node = node.findNode(childstate)!!
+                                node.sm.startState()
+                                sm2 = node.sm
+                                childstate = getChildStateMachines(sm2.own)[sm2.getStateClass(sm2.currentState)::class]
+                        }
+                    }
                 }
             }
         }
