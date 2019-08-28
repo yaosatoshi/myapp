@@ -13,31 +13,34 @@ class SingleOperationManagerPrivate {
 
     private val TAG = javaClass.simpleName
 
-    private val UNDOBUFFER_MAX_SIZE = 200
-
-    private val list = mutableListOf<OperationItemDataBase>()
-    private val redolist = mutableListOf<OperationItemDataBase>()
     private var isProcessing = false
+
+    private var child: SingleOperationManagerPrivate? = null
 
     fun doOperation(item: OperationItemDataBase, completion: (OperationItemDataBase) -> Unit) {
         if (isProcessing) {
-            throw IllegalAccessException("$TAG doOperation ignored because now processing.")
+            child?.let {
+                throw IllegalAccessException("$TAG doOperation failed.")
+
+            } ?: run {
+                child = SingleOperationManagerPrivate().also {
+                    it.doOperation(item, {
+                        child?.destroy()
+                        child = null
+                        completion.invoke(it)
+                    })
+                }
+            }
 
         } else {
             isProcessing = true
-            if (item.canUndoRedo()) {
-                list.add(item)
-                if (list.size > UNDOBUFFER_MAX_SIZE) {
-                    list.removeAt(0)
-                }
-            }
-            item.generate().doOperation {
+            item.generate().doOperation(this, {
                 isProcessing = false
                 completion.invoke(it)
-            }
+            })
         }
     }
-
+/*
     fun canUndo() = list.size > 0
     fun undo(completion: (OperationItemDataBase) -> Unit) {
         if (isProcessing || list.size <= 0) {
@@ -70,14 +73,14 @@ class SingleOperationManagerPrivate {
             }
         }
     }
-
+*/
     fun destroy() {
         clearAllBuffers()
     }
 
     private fun clearAllBuffers() {
+        child?.destroy()
+        child = null
         isProcessing = false
-        list.clear()
-        redolist.clear()
     }
 }
